@@ -89,7 +89,7 @@
      <!-- menu de oportunidades-->
     <section class="container my-5">
       <h2 class="mb-4">Destaques Turísticos</h2>
-      <div class="row row-cols-1 row-cols-sm2 row-cols-md-3 row-cols-lg-4 g-8">
+      <div class="row row-cols-1 row-cols-sm2 row-cols-md-3 row-cols-lg-4 g-8" id="">
         <!-- cards em destaque -->
         <div class="col">
           <div class="card h-100">
@@ -99,7 +99,13 @@
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             </div>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item">⭐⭐⭐⭐⭐</li>
+              <li class="list-group-item">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </li>
             </ul>
             <div class="card-body">
               <a href="#" class="card-link">Card link</a>
@@ -175,11 +181,91 @@
 
     </section>
 
+    <!--mapa-->
+    <section class="container my-5">
+      <h5>Mapa Interativo</h5>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3706.1652300906887!2d-55.72769402496992!3d-22.536640079524225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94641e4c41fffb21%3A0xe148aa0c88a9ce3e!2sPonta%20Por%C3%A3%2C%20MS!5e0!3m2!1spt-BR!2sbr!4v1714310045471!5m2!1spt-BR!2sbr"
+        width="100%"
+        height="600"
+        style="border:0;"
+        allowfullscreen="0"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </section>
+
+    <!-- Breve História -->
+    <section class="container-fluid my-5" style="background-color: #f8f9fa; padding: 2rem; border-radius: 8px;">
+      <div class="row ">
+        <div class="col-md-6">
+          <img src="src/Ponta pora destaque.jpg" class="img-fluid rounded" alt="Centro de Ponta Porã">
+        </div>
+        <div class="col-md-6 d-flex flex-column justify-content-center">
+          <h2 class="mb-3">Ponta Porã: Cultura, História e Aventura na Fronteira</h2>
+          <p><strong>Ponta Porã</strong>, localizada no estado de Mato Grosso do Sul, é uma cidade brasileira que faz fronteira com Pedro Juan Caballero, no Paraguai. Essa proximidade geográfica resultou em uma conurbação internacional, onde as culturas brasileira e paraguaia se entrelaçam, criando uma identidade única para a região.</p>
+          <p>A cidade possui uma rica história que remonta ao século XIX, quando começou a se formar em 1892 com a construção de um porto para exportação de erva-mate. Inicialmente chamada de Punta Porã, desenvolveu-se rapidamente devido à sua posição estratégica na fronteira com o Paraguai. A presença de gaúchos também contribuiu para a diversidade cultural local, evidenciada na culinária, música e tradições.</p>
+          <p>Para os visitantes, Ponta Porã oferece uma variedade de atrações turísticas:</p>
+          <p>Para os visitantes, Ponta Porã oferece diversas opções de lazer e turismo, como espaços verdes perfeitos para caminhadas e piqueniques, museus que preservam a história da região, monumentos que celebram a união cultural entre brasileiros e paraguaios e áreas de conservação ambiental com trilhas ecológicas. A cidade também é ponto de partida para visitar reservas naturais no Paraguai, onde a natureza e a história se encontram em cenários impressionantes.</p>
+          <p>Além disso, a cidade é conhecida por suas opções de compras, especialmente na vizinha Pedro Juan Caballero, onde shoppings e lojas de importados atraem turistas de diversas regiões.</p>
+          <p>Visitar Ponta Porã é mergulhar em uma experiência única de convivência cultural, história rica e belezas naturais. Uma cidade onde as fronteiras se tornam pontos de encontro e celebração.</p>
+        </div>
+      </div>
+    </section>
+
     <div id="footer">
 
     </div>
 
-   <script src="js/layout.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <script>
+
+      async function carregaDestaques(tipo) {
+        const resposta = await fetch(`http://127.0.0.1:5000/locais/top4?tipo=${tipo}`)
+        const locais = await resposta.json()
+
+        const container = document.getElementById("destaques-container")
+        container.innerHTML="" //limpar o conteúdo da row
+
+        //iterar  a lista de locais da forma dinâmica
+        locais.array.forEach(local => {
+          const cardHTML = `
+              <div class="col">
+                <div class="card h-100">
+                  <img src="${local.capa}" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">${local.titulo}</h5>
+                    <p class="card-text">${local.descricao}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <span>${parseFloat(local.nota).toFixed(1)}</span>
+                  </li>
+                </ul>
+                  <div class="card-body">
+                    <a href="#" class="card-link">Card link</a>
+                  </div>
+                </div>
+              </div>
+          `
+          container.innerHTML+=cardHTML
+        });
+      }
+
+      function gerarEstrelas(nota){
+        const cheias = parseInt(nota)
+        const vazias = 5-cheias
+
+        return "<i class='bi bi-star-fill"
+      }
+
+      document.addEventListener("DOMContentLoaded", carregaDestaques("Cultural"))
+    </script>
+    <script src="js/layout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 </body>
 </html>
